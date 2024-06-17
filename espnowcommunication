@@ -4,47 +4,31 @@ import network
 import espnow
 import time
 
-# Initialize WiFi in Station mode
 sta = network.WLAN(network.STA_IF)
 sta.active(True)
 sta.disconnect()
 
-# Initialize ESP-NOW
 e = espnow.ESPNow()
 e.active(True)
 
-# Define the MAC addresses of the slave devices
 peer1 = b'\xfc\xb4\x67\x92\x57\xf4'
 peer2 = b'\xfc\xb4\x67\x92\x43\x68'
 
-# Add peers
 e.add_peer(peer1)
 e.add_peer(peer2)
 
-# Main loop to send messages continuously
 while True:
     try:
-        # Send "led on" message to both peers
         e.send(peer1, "led on".encode())
-        print("Sent 'led on' to peer1")
         e.send(peer2, "led on".encode())
-        print("Sent 'led on' to peer2")
         time.sleep(1)  # Wait for 1 second
 
-        # Send "led off" message to both peers
         e.send(peer1, "led off".encode())
-        print("Sent 'led off' to peer1")
         e.send(peer2, "led off".encode())
-        print("Sent 'led off' to peer2")
         time.sleep(1)  # Wait for 1 second
     except OSError as e:
         print("Error:", e)
-        # Optionally add error handling or retry logic here
-
-    # Add a longer delay between iterations
-    time.sleep(5)  # Wait for 5 seconds before the next iteration
-
-
+    time.sleep(5)
 
 #step 2 esp32 code slave-1 controller
 import network

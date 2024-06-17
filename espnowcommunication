@@ -1,17 +1,6 @@
 #espnow communication micropython
 #Step-0 this is the code which tells the mac address of esp32. 
 import network
-# Initialize the WiFi interface in Station mode
-sta = network.WLAN(network.STA_IF)
-sta.active(True)
-# Get the MAC address
-mac_address = sta.config('mac')
-# Print the MAC address in a readable format
-print("MAC address:", ':'.join('{:02x}'.format(b) for b in mac_address))
-
-#step 1 esp32 code master-1 controller
-
-import network
 import espnow
 import time
 
@@ -25,31 +14,36 @@ e = espnow.ESPNow()
 e.active(True)
 
 # Define the MAC addresses of the slave devices
-peer1 = b'\x5d\xde\xc3\x9c\x0d\x31'      # MAC address of slave1 WiFi interface
-peer2 = b'\x11\x11\xee\xa9\xd2\xfc'      # MAC address of slave2 WiFi interface
+peer1 = b'\xfc\xb4\x67\x92\x57\xf4'
+peer2 = b'\xfc\xb4\x67\x92\x43\x68'
 
 # Add peers
 e.add_peer(peer1)
 e.add_peer(peer2)
 
-# Send data to the slaves
-for i in range(10000):
-    # Send incrementing numbers as a string to peer1
-    e.send(peer1, str(i) * 20)
-    print("send:", i)
-    
-    # Send "led on" message to both peers
-    e.send(peer1, "led on".encode())
-    e.send(peer2, "led on".encode())
-    time.sleep(1)
-    
-    # Send "led off" message to both peers
-    e.send(peer1, "led off".encode())
-    e.send(peer2, "led off".encode())
+# Main loop to send messages continuously
+while True:
+    try:
+        # Send "led on" message to both peers
+        e.send(peer1, "led on".encode())
+        print("Sent 'led on' to peer1")
+        e.send(peer2, "led on".encode())
+        print("Sent 'led on' to peer2")
+        time.sleep(1)  # Wait for 1 second
 
-# Send 'end' message to both peers
-e.send(peer1, b'end')
-e.send(peer2, b'end')
+        # Send "led off" message to both peers
+        e.send(peer1, "led off".encode())
+        print("Sent 'led off' to peer1")
+        e.send(peer2, "led off".encode())
+        print("Sent 'led off' to peer2")
+        time.sleep(1)  # Wait for 1 second
+    except OSError as e:
+        print("Error:", e)
+        # Optionally add error handling or retry logic here
+
+    # Add a longer delay between iterations
+    time.sleep(5)  # Wait for 5 seconds before the next iteration
+
 
 
 #step 2 esp32 code slave-1 controller

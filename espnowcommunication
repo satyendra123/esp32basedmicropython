@@ -1,4 +1,14 @@
 #espnow communication micropython
+#Step-0 this is the code which tells the mac address of esp32. 
+import network
+# Initialize the WiFi interface in Station mode
+sta = network.WLAN(network.STA_IF)
+sta.active(True)
+# Get the MAC address
+mac_address = sta.config('mac')
+# Print the MAC address in a readable format
+print("MAC address:", ':'.join('{:02x}'.format(b) for b in mac_address))
+
 #step 1 esp32 code master-1 controller
 
 import network

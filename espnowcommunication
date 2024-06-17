@@ -1,7 +1,6 @@
 #espnow communication micropython
 #step 1 esp32 code master-1 controller
-python
-Copy code
+
 import network
 import espnow
 import time

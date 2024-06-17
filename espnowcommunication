@@ -81,6 +81,7 @@ while True:
     time.sleep(1)  # Small delay to prevent tight loop
 
 
+
 #Step-3 esp32 code slave-2 controller
 import network
 import espnow

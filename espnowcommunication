@@ -1,0 +1,71 @@
+#espnow communication micropython
+#step 1 esp32 code master-1 controller
+import network
+import espnow
+import time
+sta = network.wlan(network.STA_IF)
+sta.active(True)
+sta.disconnect()
+e=espnow.ESPNOW()
+e.active(True)
+peer1 = b'5\xde\xc3\x9c\r1'      # mac address of slave1 wifi interface
+peer2 = b'1\x11\xee\xa9\xd2\xfc' # mac address of slave2 wifi interface
+e.add_peer(peer1)
+e.add_peer(peer2)
+
+for i in range(10000)
+   e.send(Peer, str(i)*20, True)
+   print("send:",i)
+   e.send(peer1, "led on".encode())
+   e.send(peer2, "led on".encode())
+   time.sleep(1)
+   e.send(peer1, "led off".encode())
+   e.send(peer2, "led off".encode())
+
+e.send(peer1,b'end)
+e.send(peer2,b'end)
+
+
+#step 2 esp32 code slave-1 controller
+import network
+import espnow
+from machine import Pin
+sta = network.wlan(network.STA_IF)
+sta.active(True)
+sta.disconnect()
+e=espnow.ESPNOW()
+e.active(True)
+led = Pin(2,pin.OUT)
+while True:
+    host, msg = e_recv()
+    if msg:
+       print(host,msg)
+       if msg == b'end:
+          break
+       elif msg == b'led on:
+          led.value(1)
+       elif msg == b'led off:
+          led.value(0)
+
+#Step-3 esp32 code slave-2 controller
+import network
+import espnow
+from machine import Pin
+sta = network.wlan(network.STA_IF)
+sta.active(True)
+sta.disconnect()
+e=espnow.ESPNOW()
+e.active(True)
+led = Pin(2,pin.OUT)
+while True:
+    host, msg = e_recv()
+    if msg:
+       print(host,msg)
+       if msg == b'end:
+          break
+       elif msg == b'led on:
+          led.value(1)
+       elif msg == b'led off:
+          led.value(0)
+
+   
